@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="theme-color" content="#0f0c29"/>
+<meta name="description" content="تطبيق SPL - Saad Pro Life | سعد برو لايف - تطبيق صحة المرأة الشامل"/>
+<title>SPL — Saad Pro Life</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);min-height:100vh;direction:rtl;color:#f0e6ff;overflow-x:hidden}
+#app{max-width:480px;margin:0 auto;min-height:100vh;position:relative}
+.glow1{position:fixed;top:-100px;right:-100px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,100,150,.15) 0%,transparent 70%);pointer-events:none;z-index:0}
+.glow2{position:fixed;bottom:100px;left:-80px;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(100,150,255,.12) 0%,transparent 70%);pointer-events:none;z-index:0}
+/* HEADER */
+.header{background:linear-gradient(135deg,rgba(255,100,150,.2),rgba(150,100,255,.2));backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08);padding:16px 20px 10px;position:sticky;top:0;z-index:100}
+.header-top{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:8px}
+.badge{background:linear-gradient(135deg,#ff6496,#a855f7);border-radius:10px;padding:4px 10px;font-size:11px;font-weight:700;letter-spacing:1px;color:#fff}
+.brand-name{font-size:15px;font-weight:700;color:#fff}
+.sub{font-size:10px;color:rgba(255,255,255,.5);margin-top:2px}
+.hbtns{display:flex;gap:8px}
+.hbtn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 12px;color:#fff;font-size:12px;cursor:pointer;font-family:'Cairo',sans-serif}
+.phase-strip{margin-top:8px;background:rgba(100,100,255,.15);border-radius:20px;padding:4px 12px;display:inline-block;font-size:11px;border:1px solid rgba(255,255,255,.1)}
+.phase-strip.fertile{background:rgba(255,100,100,.25)}
+.phase-strip.menstrual{background:rgba(200,50,50,.2)}
+/* TABS */
+.tabbar{display:flex;overflow-x:auto;background:rgba(0,0,0,.3);border-bottom:1px solid rgba(255,255,255,.06);scrollbar-width:none}
+.tabbar::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;padding:10px 14px;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(255,255,255,.5);font-size:11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;white-space:nowrap;transition:all .2s;font-family:'Cairo',sans-serif}
+.tab.active{background:rgba(255,100,150,.2);border-bottom-color:#ff6496;color:#ff6496}
+.tab-icon{font-size:16px}
+/* CONTENT */
+.content{padding:16px;padding-bottom:80px;position:relative;z-index:1}
+/* CARDS */
+.card{background:rgba(255,255,255,.04);backdrop-filter:blur(10px);border-radius:16px;padding:14px;border:1px solid rgba(255,255,255,.08);margin-bottom:0}
+.section-title{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.section-title h2{margin:0;font-size:16px;font-weight:800;color:#f0e6ff}
+/* INPUTS */
+input[type=text],input[type=number],input[type=date]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:#f0e6ff;font-size:13px;outline:none;font-family:'Cairo',sans-serif}
+input[type=range]{width:100%;accent-color:#ff6496}
+label.lbl{display:block;font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:600}
+/* GRIDS */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+/* BUTTONS */
+.btn{border:none;cursor:pointer;font-family:'Cairo',sans-serif}
+.btn-outline{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:6px 14px;color:rgba(255,255,255,.7);font-size:11px}
+.btn-primary{background:linear-gradient(135deg,#ff6496,#a855f7);border-radius:12px;padding:10px;color:#fff;font-size:13px;font-weight:700;width:100%;border:none}
+.btn-add{background:rgba(255,100,150,.2);border:1px solid rgba(255,100,150,.4);border-radius:8px;padding:4px 10px;color:#ff6496;font-size:11px}
+.btn-added{background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.4);border-radius:8px;padding:4px 10px;color:#ef4444;font-size:11px}
+.btn-remove{background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.3);border-radius:6px;padding:2px 8px;color:#ef4444;font-size:10px}
+.btn-month{padding:8px 4px;border-radius:10px;border:none;font-size:11px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.6);font-family:'Cairo',sans-serif;cursor:pointer}
+.btn-month.active{background:linear-gradient(135deg,#ff6496,#a855f7);color:#fff;font-weight:700}
+.btn-gender{flex:1;padding:8px;border-radius:10px;border:none;font-size:13px;cursor:pointer;font-family:'Cairo',sans-serif}
+.btn-status{flex:1;padding:8px 4px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(255,255,255,.5);font-size:11px;cursor:pointer;font-family:'Cairo',sans-serif}
+.btn-status.active{background:linear-gradient(135deg,rgba(255,100,150,.3),rgba(168,85,247,.3));color:#fff;font-weight:700}
+.btn-cond{padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(255,255,255,.5);font-size:11px;cursor:pointer;font-family:'Cairo',sans-serif}
+.btn-cond.active{background:rgba(255,100,150,.2);color:#ff6496}
+/* STAT CARDS */
+.stat-card{border-radius:14px;padding:12px}
+/* CYCLE BAR */
+.cycle-bar-wrap{position:relative;height:20px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.06)}
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:10px}
+th{padding:6px 4px;color:#a855f7;font-weight:600;text-align:center;background:rgba(255,255,255,.05)}
+td{padding:6px 4px;text-align:center;border-bottom:1px solid rgba(255,255,255,.05)}
+/* FERTILITY BAR */
+.fert-row{margin-bottom:8px}
+.fert-bar-bg{background:rgba(255,255,255,.08);border-radius:10px;height:6px;overflow:hidden}
+.fert-bar-fill{height:100%;border-radius:10px;transition:width .5s}
+/* ITEM ROWS */
+.item-row{display:flex;align-items:center;gap:12px;padding:10px 12px;margin-bottom:8px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+.item-icon{font-size:24px}
+.item-info{flex:1}
+.item-name{font-size:12px;font-weight:700}
+.item-sub{font-size:10px;color:rgba(255,255,255,.45);margin-top:2px}
+.item-dose{font-size:10px;color:#f59e0b;margin-top:2px}
+.item-type{font-size:10px;color:#22d3ee;margin-top:2px}
+.item-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.cat-badge{background:rgba(168,85,247,.2);border-radius:10px;padding:2px 8px;font-size:9px;color:#a855f7;border:1px solid rgba(168,85,247,.3)}
+/* STEP ROWS */
+.step-row{display:flex;gap:12px;margin-bottom:10px;padding:10px;background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.06)}
+/* MOOD PHASE */
+.mood-phase{padding:10px 12px;margin-bottom:8px;border-radius:12px}
+/* CHILD CARD */
+.child-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.age-bubble{background:linear-gradient(135deg,#f59e0b,#f97316);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff}
+/* PROFILE AVATAR */
+.avatar{width:70px;height:70px;border-radius:50%;margin:0 auto 8px;background:linear-gradient(135deg,#ff6496,#a855f7);display:flex;align-items:center;justify-content:center;font-size:30px}
+/* FOOTER */
+.footer-credit{margin-top:20px;padding:16px;text-align:center;background:rgba(255,255,255,.03);border-radius:16px;border:1px solid rgba(255,255,255,.06);font-size:11px;color:rgba(255,255,255,.3);line-height:2}
+/* CART SUMMARY */
+.cart-summary{margin-top:18px;background:rgba(255,100,150,.08);border:1px solid rgba(255,100,150,.2);border-radius:16px;padding:14px}
+/* GENDER RESULT */
+.gender-result{margin-top:14px;padding:16px;border-radius:16px;text-align:center}
+/* CHINESE TABLE */
+.ch-table td{font-weight:700;font-size:13px}
+/* SIGN CARD */
+.sign-card{background:rgba(168,85,247,.1);border-radius:10px;padding:8px;border:1px solid rgba(168,85,247,.2)}
+/* FOOD ROW */
+.food-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+/* MONTH TAGS */
+.month-tag{border-radius:20px;padding:4px 12px;font-size:12px}
+/* INFO BOX */
+.info-box{padding:10px;background:rgba(34,211,238,.1);border-radius:10px;font-size:11px;color:#22d3ee}
+/* DIVORCE TIP */
+.divorce-tip{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start}
+/* HIDDEN */
+.hidden{display:none}
+/* FLEX helpers */
+.flex{display:flex}.flex-wrap{flex-wrap:wrap}.gap6{gap:6px}.gap8{gap:8px}.gap10{gap:10px}.gap12{gap:12px}.mt8{margin-top:8px}.mt10{margin-top:10px}.mt12{margin-top:12px}.mt14{margin-top:14px}.mt18{margin-top:18px}.mt20{margin-top:20px}.flex1{flex:1}
+</style>
+</head>
+<body>
+<div class="glow1"></div>
+<div class="glow2"></div>
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="brand">
+          <span class="badge">SPL</span>
+          <span class="brand-name">Saad Pro Life</span>
+        </div>
+        <div class="sub">إعداد: سعد علي سعد القرني</div>
+      </div>
+      <div class="hbtns">
+        <button class="hbtn" onclick="shareReport()" id="share-btn">📤 مشاركة</button>
+        <button class="hbtn" onclick="window.print()">🖨️</button>
+      </div>
+    </div>
+    <div id="phase-strip" class="phase-strip hidden"></div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tabbar" id="tabbar">
+    <button class="tab active" onclick="setTab('cycle')" id="tab-cycle"><span class="tab-icon">🌙</span>الدورة</button>
+    <button class="tab" onclick="setTab('fertility')" id="tab-fertility"><span class="tab-icon">🌸</span>الخصوبة</button>
+    <button class="tab" onclick="setTab('chinese')" id="tab-chinese"><span class="tab-icon">☯️</span>جنس المولود</button>
+    <button class="tab" onclick="setTab('mood')" id="tab-mood"><span class="tab-icon">💆</span>المزاج</button>
+    <button class="tab" onclick="setTab('cart')" id="tab-cart"><span class="tab-icon">🛒</span>السلة <span id="cart-count" class="hidden" style="background:#ff6496;border-radius:50%;width:14px;height:14px;font-size:9px;display:inline-flex;align-items:center;justify-content:center;color:#fff;margin-right:2px"></span></button>
+    <button class="tab" onclick="setTab('children')" id="tab-children"><span class="tab-icon">👶</span>الأطفال</button>
+    <button class="tab" onclick="setTab('profile')" id="tab-profile"><span class="tab-icon">👤</span>ملفي</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ===== CYCLE ===== -->
+    <div id="page-cycle">
+      <div class="section-title"><span style="font-size:20px">🌙</span><h2>تتبع الدورة الشهرية</h2></div>
+      <div class="card">
+        <label class="lbl">تاريخ آخر دورة</label>
+        <input type="date" id="last-period" oninput="recalc()"/>
+        <label class="lbl" style="margin-top:12px">طول الدورة (يوم)</label>
+        <div class="flex gap12" style="align-items:center">
+          <input type="range" min="21" max="45" value="28" id="cycle-len" oninput="recalc();document.getElementById('cycle-len-val').textContent=this.value" style="flex:1"/>
+          <span id="cycle-len-val" style="color:#ff6496;font-weight:700;font-size:18px">28</span>
+        </div>
+      </div>
+
+      <div class="grid2 mt14" id="date-cards" style="display:none">
+        <div class="stat-card" style="background:linear-gradient(135deg,#f59e0b22,#f59e0b11);border:1px solid #f59e0b44">
+          <div style="font-size:20px;margin-bottom:4px">🥚</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.5);margin-bottom:2px">الإباضة المتوقعة</div>
+          <div id="ov-date" style="font-size:12px;font-weight:700;color:#f59e0b"></div>
+        </div>
+        <div class="stat-card" style="background:linear-gradient(135deg,#a855f722,#a855f711);border:1px solid #a855f744">
+          <div style="font-size:20px;margin-bottom:4px">📅</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.5);margin-bottom:2px">الدورة القادمة</div>
+          <div id="next-period" style="font-size:12px;font-weight:700;color:#a855f7"></div>
+        </div>
+        <div class="stat-card" style="background:linear-gradient(135deg,#ec489922,#ec489911);border:1px solid #ec489944">
+          <div style="font-size:20px;margin-bottom:4px">🌸</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.5);margin-bottom:2px">بداية نافذة الخصوبة</div>
+          <div id="fertile-start" style="font-size:12px;font-weight:700;color:#ec4899"></div>
+        </div>
+        <div class="stat-card" style="background:linear-gradient(135deg,#ef444422,#ef444411);border:1px solid #ef444444">
+          <div style="font-size:20px;margin-bottom:4px">🌺</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.5);margin-bottom:2px">نهاية النافذة</div>
+          <div id="fertile-end" style="font-size:12px;font-weight:700;color:#ef4444"></div>
+        </div>
+      </div>
+
+      <div class="card mt14" id="cycle-visual" style="display:none">
+        <div style="font-size:12px;font-weight:700;margin-bottom:12px;color:#ff6496">مراحل الدورة الشهرية</div>
+        <div class="cycle-bar-wrap" id="cycle-bar"></div>
+        <div class="flex flex-wrap gap10 mt10">
+          <div class="flex gap6" style="align-items:center;font-size:10px"><div style="width:8px;height:8px;border-radius:50%;background:#ef4444"></div><span style="color:rgba(255,255,255,.6)">حيض (1-5)</span></div>
+          <div class="flex gap6" style="align-items:center;font-size:10px"><div style="width:8px;height:8px;border-radius:50%;background:#3b82f6"></div><span style="color:rgba(255,255,255,.6)">جريب (6-12)</span></div>
+          <div class="flex gap6" style="align-items:center;font-size:10px"><div style="width:8px;height:8px;border-radius:50%;background:#f59e0b"></div><span style="color:rgba(255,255,255,.6)">إباضة</span></div>
+          <div class="flex gap6" style="align-items:center;font-size:10px"><div style="width:8px;height:8px;border-radius:50%;background:#a855f7"></div><span style="color:rgba(255,255,255,.6)">جسم أصفر</span></div>
+        </div>
+      </div>
+
+      <div class="card mt14" id="intercourse-tip" style="display:none">
+        <div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#a855f7">💬 أفضل وقت للجماع</div>
+        <div id="intercourse-text" style="font-size:12px;line-height:1.8;color:rgba(255,255,255,.75)"></div>
+      </div>
+
+      <div class="card mt14">
+        <div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#22d3ee">🧪 قيم الهرمونات المرجعية</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.5);margin-bottom:8px">قيم مرجعية حسب مرحلة الدورة — راجعي طبيبك لتفسير نتائجك</div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>الهرمون</th><th>الوحدة</th><th style="color:#3b82f6">جريب</th><th style="color:#f59e0b">إباضة</th><th style="color:#a855f7">جسم أصفر</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:#f0e6ff;text-align:right">FSH</td><td style="color:rgba(255,255,255,.4)">mIU/mL</td><td style="color:#3b82f6">3-10</td><td style="color:#f59e0b">4-25</td><td style="color:#a855f7">1-7</td></tr>
+              <tr><td style="font-weight:600;color:#f0e6ff;text-align:right">LH</td><td style="color:rgba(255,255,255,.4)">mIU/mL</td><td style="color:#3b82f6">2-15</td><td style="color:#f59e0b">22-105</td><td style="color:#a855f7">0.6-19</td></tr>
+              <tr><td style="font-weight:600;color:#f0e6ff;text-align:right">E2 إستراديول</td><td style="color:rgba(255,255,255,.4)">pg/mL</td><td style="color:#3b82f6">25-145</td><td style="color:#f59e0b">150-750</td><td style="color:#a855f7">30-450</td></tr>
+              <tr><td style="font-weight:600;color:#f0e6ff;text-align:right">Progesterone</td><td style="color:rgba(255,255,255,.4)">ng/mL</td><td style="color:#3b82f6">&lt;1</td><td style="color:#f59e0b">&lt;3</td><td style="color:#a855f7">&gt;7</td></tr>
+              <tr><td style="font-weight:600;color:#f0e6ff;text-align:right">AMH</td><td style="color:rgba(255,255,255,.4)">ng/mL</td><td style="color:#3b82f6">1.0-3.5</td><td style="color:#f59e0b">1.0-3.5</td><td style="color:#a855f7">1.0-3.5</td></tr>
+              <tr><td style="font-weight:600;color:#f0e6ff;text-align:right">TSH</td><td style="color:rgba(255,255,255,.4)">mIU/L</td><td style="color:#3b82f6">0.4-4.0</td><td style="color:#f59e0b">0.4-4.0</td><td style="color:#a855f7">0.4-4.0</td></tr>
+              <tr><td style="font-weight:600;color:#f0e6ff;text-align:right">Prolactin</td><td style="color:rgba(255,255,255,.4)">ng/mL</td><td style="color:#3b82f6">3-29</td><td style="color:#f59e0b">3-29</td><td style="color:#a855f7">3-29</td></tr>
+              <tr><td style="font-weight:600;color:#f0e6ff;text-align:right">DHEA-S</td><td style="color:rgba(255,255,255,.4)">μg/dL</td><td style="color:#3b82f6">65-380</td><td style="color:#f59e0b">65-380</td><td style="color:#a855f7">65-380</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:10px;font-size:10px;color:rgba(255,255,255,.4);line-height:1.8">
+          <div>• <b>FSH:</b> ارتفاعه قد يدل على ضعف الاحتياطي المبيضي</div>
+          <div>• <b>LH:</b> ارتفاعه مع FSH قد يدل على PCOS</div>
+          <div>• <b>AMH:</b> أفضل مؤشر للاحتياطي المبيضي — مستقر طوال الدورة</div>
+          <div>• <b>TSH:</b> قيم &gt;2.5 قد تؤثر على الخصوبة</div>
+          <div>• <b>Prolactin:</b> ارتفاعه يثبط الإباضة ويسبب عدم انتظام الدورة</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FERTILITY ===== -->
+    <div id="page-fertility" class="hidden">
+      <div class="section-title"><span style="font-size:20px">🌸</span><h2>الخصوبة والحمل</h2></div>
+      <div class="card">
+        <div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#f59e0b">📊 مؤشر الخصوبة حسب العمر</div>
+        <div id="fert-bars"></div>
+      </div>
+      <div class="card mt14">
+        <div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#ec4899">📋 خطوات تحسين الخصوبة</div>
+        <div class="step-row"><div style="font-size:22px">🧪</div><div><div style="font-size:12px;font-weight:700">1. تحليل الهرمونات</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">FSH, LH, E2, AMH, TSH, Prolactin في اليوم 2-3 من الدورة</div></div></div>
+        <div class="step-row"><div style="font-size:22px">🔬</div><div><div style="font-size:12px;font-weight:700">2. متابعة الإباضة</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">استخدمي أشرطة LH أو تصوير مهبلي لتأكيد الإباضة</div></div></div>
+        <div class="step-row"><div style="font-size:22px">🥗</div><div><div style="font-size:12px;font-weight:700">3. تحسين التغذية</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">حمض الفوليك، أوميغا 3، فيتامين D، مضادات الأكسدة</div></div></div>
+        <div class="step-row"><div style="font-size:22px">⚖️</div><div><div style="font-size:12px;font-weight:700">4. إدارة الوزن</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">BMI المثالي 18.5-24.9 لأفضل خصوبة</div></div></div>
+        <div class="step-row"><div style="font-size:22px">🚫</div><div><div style="font-size:12px;font-weight:700">5. تجنب المؤثرات</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">التوقف عن التدخين، تقليل الكافيين، تجنب التوتر الزائد</div></div></div>
+        <div class="step-row" style="margin-bottom:0"><div style="font-size:22px">📅</div><div><div style="font-size:12px;font-weight:700">6. توقيت الجماع</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">يومياً أو كل يوم خلال نافذة الخصوبة (5 أيام قبل الإباضة)</div></div></div>
+      </div>
+      <div class="card mt14">
+        <div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#a855f7">🤰 علامات الحمل المبكر</div>
+        <div class="grid2">
+          <div class="sign-card"><div style="font-size:12px;font-weight:600">• تأخر الدورة</div><div style="font-size:10px;color:#a855f7">الأسبوع 4-5</div></div>
+          <div class="sign-card"><div style="font-size:12px;font-weight:600">• غثيان صباحي</div><div style="font-size:10px;color:#a855f7">الأسبوع 4-8</div></div>
+          <div class="sign-card"><div style="font-size:12px;font-weight:600">• حساسية الثدي</div><div style="font-size:10px;color:#a855f7">الأسبوع 3-4</div></div>
+          <div class="sign-card"><div style="font-size:12px;font-weight:600">• تعب وإرهاق</div><div style="font-size:10px;color:#a855f7">الأسبوع 4-6</div></div>
+          <div class="sign-card"><div style="font-size:12px;font-weight:600">• كثرة التبول</div><div style="font-size:10px;color:#a855f7">الأسبوع 4-6</div></div>
+          <div class="sign-card"><div style="font-size:12px;font-weight:600">• تغير الرغبة الشمية</div><div style="font-size:10px;color:#a855f7">الأسبوع 4-8</div></div>
+        </div>
+        <div class="info-box mt10">⚡ اختبار الحمل الأفضل: بول الصباح الأول بعد تأخر الدورة بـ 3-5 أيام</div>
+      </div>
+    </div>
+
+    <!-- ===== CHINESE GENDER ===== -->
+    <div id="page-chinese" class="hidden">
+      <div class="section-title"><span style="font-size:20px">☯️</span><h2>جنس المولود - الطريقة الصينية</h2></div>
+      <div class="card">
+        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:12px;line-height:1.7">الجدول الصيني للتنبؤ بجنس المولود — يعتمد على العمر القمري للأم وشهر الحمل القمري. الدقة المزعومة 70-93% وهي للتسلية والاسترشاد فقط.</div>
+        <label class="lbl">شهر الحمل المرغوب (ميلادي)</label>
+        <div class="grid4" id="month-btns"></div>
+        <div class="gender-result" id="gender-result"></div>
+      </div>
+      <div class="card mt14">
+        <div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#f59e0b">🗓️ أفضل الشهور لاختيار الجنس</div>
+        <div class="flex gap10 mt8" style="margin-bottom:12px">
+          <button class="btn-gender" id="btn-want-male" onclick="setDesiredGender('ذكر')" style="background:rgba(59,130,246,.3);color:#fff;border:none">👦 أريد ذكر</button>
+          <button class="btn-gender" id="btn-want-female" onclick="setDesiredGender('أنثى')" style="background:rgba(255,255,255,.06);color:rgba(255,255,255,.5);border:none">👧 أريد أنثى</button>
+        </div>
+        <div class="flex flex-wrap gap6" id="best-months"></div>
+      </div>
+      <div class="card mt14">
+        <div style="font-size:12px;font-weight:700;margin-bottom:8px;color:#22d3ee">📊 جدول كامل لعمرك القمري</div>
+        <div style="overflow-x:auto">
+          <table class="ch-table">
+            <thead><tr><th>الشهر</th><th>يناير</th><th>فبراير</th><th>مارس</th><th>أبريل</th><th>مايو</th><th>يونيو</th><th>يوليو</th><th>أغسطس</th><th>سبتمبر</th><th>أكتوبر</th><th>نوفمبر</th><th>ديسمبر</th></tr></thead>
+            <tbody><tr id="ch-table-row"><td style="color:rgba(255,255,255,.5);font-size:10px">النتيجة</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MOOD ===== -->
+    <div id="page-mood" class="hidden">
+      <div class="section-title"><span style="font-size:20px">💆</span><h2>المزاج والصحة النفسية</h2></div>
+      <div class="card">
+        <div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#22d3ee">📈 المزاج حسب مراحل الدورة</div>
+        <div class="mood-phase" style="background:#ef444415;border:1px solid #ef444430"><div class="flex gap8" style="align-items:flex-start"><span style="font-size:16px">🔴</span><div><div style="font-size:12px;font-weight:700;color:#ef4444">الحيض (1-5)</div><div style="font-size:11px;color:#f0e6ff;margin:2px 0">المزاج: تعب وحساسية</div><div style="font-size:10px;color:rgba(255,255,255,.5)">💡 راحة، دفء، مغنيسيوم، كمادات دافئة</div></div></div></div>
+        <div class="mood-phase" style="background:#22c55e15;border:1px solid #22c55e30"><div class="flex gap8" style="align-items:flex-start"><span style="font-size:16px">🟢</span><div><div style="font-size:12px;font-weight:700;color:#22c55e">مرحلة الجريب (6-13)</div><div style="font-size:11px;color:#f0e6ff;margin:2px 0">المزاج: طاقة وتفاؤل وتركيز</div><div style="font-size:10px;color:rgba(255,255,255,.5)">💡 مثالي للمشاريع والتعلم والتمارين المكثفة</div></div></div></div>
+        <div class="mood-phase" style="background:#f59e0b15;border:1px solid #f59e0b30"><div class="flex gap8" style="align-items:flex-start"><span style="font-size:16px">🟡</span><div><div style="font-size:12px;font-weight:700;color:#f59e0b">الإباضة (14)</div><div style="font-size:11px;color:#f0e6ff;margin:2px 0">المزاج: ذروة الثقة والجاذبية</div><div style="font-size:10px;color:rgba(255,255,255,.5)">💡 تواصل اجتماعي، مقابلات، قرارات مهمة</div></div></div></div>
+        <div class="mood-phase" style="background:#a855f715;border:1px solid #a855f730;margin-bottom:0"><div class="flex gap8" style="align-items:flex-start"><span style="font-size:16px">🟣</span><div><div style="font-size:12px;font-weight:700;color:#a855f7">ما قبل الدورة (15-28)</div><div style="font-size:11px;color:#f0e6ff;margin:2px 0">المزاج: قلق، حساسية، تعب</div><div style="font-size:10px;color:rgba(255,255,255,.5)">💡 B6، مغنيسيوم، تجنب الكافيين والسكر</div></div></div></div>
+      </div>
+      <div class="card mt14">
+        <div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#f59e0b">🧘 تقنيات تحسين المزاج</div>
+        <div class="grid2">
+          <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.07)"><div style="font-size:20px;margin-bottom:4px">🏃</div><div style="font-size:11px;font-weight:700">تمرين 30 دقيقة</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">يرفع الإندورفين طبيعياً</div></div>
+          <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.07)"><div style="font-size:20px;margin-bottom:4px">🌿</div><div style="font-size:11px;font-weight:700">أشواغاندا</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">يخفض كورتيزول التوتر</div></div>
+          <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.07)"><div style="font-size:20px;margin-bottom:4px">☀️</div><div style="font-size:11px;font-weight:700">ضوء الشمس الصباحي</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">ينظم الميلاتونين والسيروتونين</div></div>
+          <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.07)"><div style="font-size:20px;margin-bottom:4px">😴</div><div style="font-size:11px;font-weight:700">نوم 7-9 ساعات</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">أساس التوازن الهرموني</div></div>
+          <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.07)"><div style="font-size:20px;margin-bottom:4px">🎵</div><div style="font-size:11px;font-weight:700">موسيقى هادئة</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">تخفض ضغط الدم والتوتر</div></div>
+          <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.07)"><div style="font-size:20px;margin-bottom:4px">📓</div><div style="font-size:11px;font-weight:700">كتابة يومياتك</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">تصريف عاطفي فعّال</div></div>
+          <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.07)"><div style="font-size:20px;margin-bottom:4px">🧠</div><div style="font-size:11px;font-weight:700">تأمل 10 دقائق</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">يقلل القلق ويحسن التركيز</div></div>
+          <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.07)"><div style="font-size:20px;margin-bottom:4px">🤝</div><div style="font-size:11px;font-weight:700">تواصل اجتماعي</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">يرفع الأوكسيتوسين</div></div>
+        </div>
+      </div>
+      <div class="card mt14">
+        <div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#ec4899">🍽️ أطعمة تدعم الصحة الهرمونية</div>
+        <div class="food-row"><div><div style="font-size:12px;font-weight:600">🌾 الكتان المطحون</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">يوازن الإستروجين</div></div><div style="font-size:10px;color:#f59e0b;max-width:90px;text-align:left">يومياً ملعقة كبيرة</div></div>
+        <div class="food-row"><div><div style="font-size:12px;font-weight:600">🥚 البيض الكامل</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">كولين وبروتين لبناء الهرمونات</div></div><div style="font-size:10px;color:#f59e0b;max-width:90px;text-align:left">2-3 بيضات يومياً</div></div>
+        <div class="food-row"><div><div style="font-size:12px;font-weight:600">🐟 السلمون والسردين</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">أوميغا 3 لتقليل الالتهاب</div></div><div style="font-size:10px;color:#f59e0b;max-width:90px;text-align:left">3 مرات أسبوعياً</div></div>
+        <div class="food-row"><div><div style="font-size:12px;font-weight:600">🥑 الأفوكادو</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">دهون صحية لإنتاج الهرمونات</div></div><div style="font-size:10px;color:#f59e0b;max-width:90px;text-align:left">نصف حبة يومياً</div></div>
+        <div class="food-row"><div><div style="font-size:12px;font-weight:600">🥦 الخضروات الصليبية</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">تدعم استقلاب الإستروجين</div></div><div style="font-size:10px;color:#f59e0b;max-width:90px;text-align:left">الكمية المعتدلة</div></div>
+        <div class="food-row" style="border-bottom:none"><div><div style="font-size:12px;font-weight:600">🍓 التوت والفراولة</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:2px">مضادات أكسدة قوية</div></div><div style="font-size:10px;color:#f59e0b;max-width:90px;text-align:left">يومياً حفنة</div></div>
+      </div>
+    </div>
+
+    <!-- ===== CART ===== -->
+    <div id="page-cart" class="hidden">
+      <div class="section-title"><span style="font-size:20px">🛒</span><h2>السلة الصحية والجمالية</h2></div>
+      <div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#f59e0b">💊 المكملات الغذائية الموصى بها</div>
+      <div id="supplements-list"></div>
+      <div style="font-size:12px;font-weight:700;margin:18px 0 10px;color:#22d3ee">✨ العناية بالجمال والنظافة</div>
+      <div id="beauty-list"></div>
+      <div id="cart-summary" class="cart-summary hidden">
+        <div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#ff6496">🛒 سلتي (<span id="cart-count-num">0</span> عنصر)</div>
+        <div id="cart-items"></div>
+        <button class="btn-primary mt10" onclick="shareCart()">📤 مشاركة السلة</button>
+      </div>
+    </div>
+
+    <!-- ===== CHILDREN ===== -->
+    <div id="page-children" class="hidden">
+      <div class="section-title"><span style="font-size:20px">👶</span><h2>الأطفال والتربية</h2></div>
+      <div class="card">
+        <div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#f59e0b">بيانات الأطفال</div>
+        <div id="children-inputs"></div>
+        <button onclick="addChild()" style="width:100%;padding:8px;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.2);border-radius:10px;color:rgba(255,255,255,.5);font-size:12px;cursor:pointer;font-family:'Cairo',sans-serif">+ إضافة طفل</button>
+      </div>
+      <div id="children-cards"></div>
+      <div class="card mt14">
+        <div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#a855f7">💔 التعامل مع الأطفال في حالة الطلاق أو الانفصال</div>
+        <div class="divorce-tip"><span style="font-size:18px">🛡️</span><div style="font-size:11px;color:rgba(255,255,255,.7);line-height:1.6">لا تجعل الأطفال وسيلة للعقاب بين الزوجين — يُلحق ضرراً نفسياً بالغاً</div></div>
+        <div class="divorce-tip"><span style="font-size:18px">🗣️</span><div style="font-size:11px;color:rgba(255,255,255,.7);line-height:1.6">أخبريهم بالطلاق بلغة بسيطة مناسبة لعمرهم — التكتم يُولّد قلقاً أشد</div></div>
+        <div class="divorce-tip"><span style="font-size:18px">💙</span><div style="font-size:11px;color:rgba(255,255,255,.7);line-height:1.6">أكدي دائماً أن الطلاق لا علاقة له بهم وأنهما يحبانهم بنفس القدر</div></div>
+        <div class="divorce-tip"><span style="font-size:18px">📅</span><div style="font-size:11px;color:rgba(255,255,255,.7);line-height:1.6">حافظي على روتين ثابت للأطفال — الاستقرار ضرورة لا رفاهية بعد الطلاق</div></div>
+        <div class="divorce-tip"><span style="font-size:18px">🚫</span><div style="font-size:11px;color:rgba(255,255,255,.7);line-height:1.6">تجنبي الحديث السلبي عن الأب أمام الأطفال حتى لو كان ذلك صعباً</div></div>
+        <div class="divorce-tip" style="margin-bottom:0"><span style="font-size:18px">🏥</span><div style="font-size:11px;color:rgba(255,255,255,.7);line-height:1.6">إذا ظهرت أعراض كالتبول اللاإرادي أو العدوانية — استشيري معالج أطفال</div></div>
+      </div>
+    </div>
+
+    <!-- ===== PROFILE ===== -->
+    <div id="page-profile" class="hidden">
+      <div class="section-title"><span style="font-size:20px">👤</span><h2>ملفي الشخصي</h2></div>
+      <div class="card">
+        <div style="text-align:center;margin-bottom:16px">
+          <div class="avatar">👩</div>
+          <input type="text" id="prof-name" placeholder="اسمك" oninput="saveProfile()" style="text-align:center;font-size:16px;font-weight:700;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.2);width:100%;padding:4px"/>
+        </div>
+        <div class="grid2">
+          <div><label class="lbl">العمر</label><input type="number" id="prof-age" value="28" min="18" max="55" oninput="saveProfile();updateChineseTable()" /></div>
+          <div><label class="lbl">عمر الزوج</label><input type="number" id="prof-partner" value="30" min="18" max="80" oninput="saveProfile()"/></div>
+        </div>
+        <label class="lbl" style="margin-top:12px">الحالة الاجتماعية</label>
+        <div class="flex gap8" style="margin-bottom:12px">
+          <button class="btn-status active" id="status-متزوجة" onclick="setStatus('متزوجة')">متزوجة</button>
+          <button class="btn-status" id="status-مطلقة" onclick="setStatus('مطلقة')">مطلقة</button>
+          <button class="btn-status" id="status-أرملة" onclick="setStatus('أرملة')">أرملة</button>
+          <button class="btn-status" id="status-عزباء" onclick="setStatus('عزباء')">عزباء</button>
+        </div>
+        <label class="lbl">حالات طبية</label>
+        <div class="flex flex-wrap gap6">
+          <button class="btn-cond" id="cond-PCOS" onclick="toggleCond('PCOS')">PCOS</button>
+          <button class="btn-cond" id="cond-بطانة رحم مهاجرة" onclick="toggleCond('بطانة رحم مهاجرة')">بطانة رحم مهاجرة</button>
+          <button class="btn-cond" id="cond-خيلاء" onclick="toggleCond('خيلاء')">خيلاء</button>
+          <button class="btn-cond" id="cond-قصور درقي" onclick="toggleCond('قصور درقي')">قصور درقي</button>
+          <button class="btn-cond" id="cond-فرط برولاكتين" onclick="toggleCond('فرط برولاكتين')">فرط برولاكتين</button>
+          <button class="btn-cond" id="cond-لا يوجد" onclick="toggleCond('لا يوجد')">لا يوجد</button>
+        </div>
+      </div>
+      <div class="card mt14">
+        <div style="font-size:12px;font-weight:700;margin-bottom:12px;color:#ff6496">📋 ملخص صحتي</div>
+        <div class="grid2" id="health-summary"></div>
+      </div>
+      <div class="footer-credit">
+        <div style="font-size:14px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:4px">SPL — Saad Pro Life</div>
+        إعداد: <span style="color:#ff6496">سعد علي سعد القرني</span><br/>
+        فني مختبر | مستشفى سبت العلايه العام<br/>
+        تجمع عسير الصحي<br/>
+        <span style="font-size:9px;color:rgba(255,255,255,.2)">⚠️ هذا التطبيق للتثقيف الصحي فقط — استشيري طبيبك دائماً</span>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+</div><!-- end app -->
+
+<script>
+// ===== STATE =====
+var state = {
+  lastPeriod: '', cycleLength: 28,
+  name: '', age: 28, partnerAge: 30,
+  maritalStatus: 'متزوجة', conditions: [],
+  children: [{name:'',age:''}],
+  chineseMonth: 1, desiredGender: 'ذكر',
+  cart: [], cartKeys: {}
+};
+
+// Load from localStorage
+try {
+  var saved = localStorage.getItem('spl_state_v1');
+  if(saved) { var s = JSON.parse(saved); Object.assign(state, s); }
+} catch(e){}
+
+function saveState() {
+  try { localStorage.setItem('spl_state_v1', JSON.stringify(state)); } catch(e){}
+}
+
+// ===== DATA =====
+var CHINESE = [
+  [1,18,"أنثى"],[1,19,"ذكر"],[1,20,"أنثى"],[1,21,"ذكر"],[1,22,"أنثى"],[1,23,"ذكر"],[1,24,"أنثى"],[1,25,"ذكر"],[1,26,"أنثى"],[1,27,"ذكر"],[1,28,"أنثى"],[1,29,"ذكر"],[1,30,"أنثى"],[1,31,"ذكر"],[1,32,"أنثى"],[1,33,"ذكر"],[1,34,"أنثى"],[1,35,"أنثى"],[1,36,"أنثى"],[1,37,"ذكر"],[1,38,"أنثى"],[1,39,"ذكر"],[1,40,"أنثى"],[1,41,"ذكر"],[1,42,"ذكر"],[1,43,"ذكر"],[1,44,"ذكر"],[1,45,"ذكر"],
+  [2,18,"ذكر"],[2,19,"أنثى"],[2,20,"ذكر"],[2,21,"أنثى"],[2,22,"ذكر"],[2,23,"أنثى"],[2,24,"ذكر"],[2,25,"أنثى"],[2,26,"ذكر"],[2,27,"أنثى"],[2,28,"ذكر"],[2,29,"أنثى"],[2,30,"ذكر"],[2,31,"أنثى"],[2,32,"ذكر"],[2,33,"أنثى"],[2,34,"ذكر"],[2,35,"ذكر"],[2,36,"ذكر"],[2,37,"أنثى"],[2,38,"ذكر"],[2,39,"أنثى"],[2,40,"ذكر"],[2,41,"أنثى"],[2,42,"أنثى"],[2,43,"أنثى"],[2,44,"أنثى"],[2,45,"أنثى"],
+  [3,18,"أنثى"],[3,19,"ذكر"],[3,20,"أنثى"],[3,21,"ذكر"],[3,22,"أنثى"],[3,23,"ذكر"],[3,24,"أنثى"],[3,25,"ذكر"],[3,26,"أنثى"],[3,27,"ذكر"],[3,28,"ذكر"],[3,29,"ذكر"],[3,30,"أنثى"],[3,31,"ذكر"],[3,32,"أنثى"],[3,33,"ذكر"],[3,34,"أنثى"],[3,35,"أنثى"],[3,36,"ذكر"],[3,37,"ذكر"],[3,38,"أنثى"],[3,39,"ذكر"],[3,40,"أنثى"],[3,41,"ذكر"],[3,42,"ذكر"],[3,43,"ذكر"],[3,44,"ذكر"],[3,45,"أنثى"],
+  [4,18,"ذكر"],[4,19,"أنثى"],[4,20,"ذكر"],[4,21,"أنثى"],[4,22,"ذكر"],[4,23,"أنثى"],[4,24,"ذكر"],[4,25,"أنثى"],[4,26,"ذكر"],[4,27,"ذكر"],[4,28,"أنثى"],[4,29,"أنثى"],[4,30,"ذكر"],[4,31,"أنثى"],[4,32,"ذكر"],[4,33,"أنثى"],[4,34,"ذكر"],[4,35,"ذكر"],[4,36,"أنثى"],[4,37,"أنثى"],[4,38,"ذكر"],[4,39,"أنثى"],[4,40,"ذكر"],[4,41,"أنثى"],[4,42,"أنثى"],[4,43,"أنثى"],[4,44,"أنثى"],[4,45,"ذكر"],
+  [5,18,"أنثى"],[5,19,"ذكر"],[5,20,"أنثى"],[5,21,"ذكر"],[5,22,"أنثى"],[5,23,"ذكر"],[5,24,"أنثى"],[5,25,"ذكر"],[5,26,"أنثى"],[5,27,"أنثى"],[5,28,"ذكر"],[5,29,"ذكر"],[5,30,"أنثى"],[5,31,"ذكر"],[5,32,"أنثى"],[5,33,"ذكر"],[5,34,"أنثى"],[5,35,"ذكر"],[5,36,"ذكر"],[5,37,"أنثى"],[5,38,"أنثى"],[5,39,"ذكر"],[5,40,"أنثى"],[5,41,"ذكر"],[5,42,"ذكر"],[5,43,"ذكر"],[5,44,"ذكر"],[5,45,"أنثى"],
+  [6,18,"ذكر"],[6,19,"أنثى"],[6,20,"ذكر"],[6,21,"أنثى"],[6,22,"ذكر"],[6,23,"أنثى"],[6,24,"ذكر"],[6,25,"أنثى"],[6,26,"أنثى"],[6,27,"ذكر"],[6,28,"أنثى"],[6,29,"أنثى"],[6,30,"ذكر"],[6,31,"أنثى"],[6,32,"أنثى"],[6,33,"أنثى"],[6,34,"ذكر"],[6,35,"أنثى"],[6,36,"أنثى"],[6,37,"ذكر"],[6,38,"ذكر"],[6,39,"أنثى"],[6,40,"ذكر"],[6,41,"أنثى"],[6,42,"أنثى"],[6,43,"أنثى"],[6,44,"أنثى"],[6,45,"ذكر"],
+  [7,18,"ذكر"],[7,19,"ذكر"],[7,20,"أنثى"],[7,21,"أنثى"],[7,22,"أنثى"],[7,23,"ذكر"],[7,24,"أنثى"],[7,25,"أنثى"],[7,26,"ذكر"],[7,27,"أنثى"],[7,28,"ذكر"],[7,29,"ذكر"],[7,30,"أنثى"],[7,31,"ذكر"],[7,32,"ذكر"],[7,33,"ذكر"],[7,34,"أنثى"],[7,35,"ذكر"],[7,36,"ذكر"],[7,37,"أنثى"],[7,38,"ذكر"],[7,39,"ذكر"],[7,40,"أنثى"],[7,41,"ذكر"],[7,42,"ذكر"],[7,43,"ذكر"],[7,44,"ذكر"],[7,45,"أنثى"],
+  [8,18,"أنثى"],[8,19,"أنثى"],[8,20,"ذكر"],[8,21,"ذكر"],[8,22,"ذكر"],[8,23,"أنثى"],[8,24,"ذكر"],[8,25,"ذكر"],[8,26,"أنثى"],[8,27,"ذكر"],[8,28,"أنثى"],[8,29,"أنثى"],[8,30,"ذكر"],[8,31,"أنثى"],[8,32,"أنثى"],[8,33,"أنثى"],[8,34,"ذكر"],[8,35,"أنثى"],[8,36,"أنثى"],[8,37,"ذكر"],[8,38,"أنثى"],[8,39,"أنثى"],[8,40,"ذكر"],[8,41,"أنثى"],[8,42,"أنثى"],[8,43,"أنثى"],[8,44,"أنثى"],[8,45,"ذكر"],
+  [9,18,"أنثى"],[9,19,"ذكر"],[9,20,"ذكر"],[9,21,"أنثى"],[9,22,"ذكر"],[9,23,"أنثى"],[9,24,"ذكر"],[9,25,"ذكر"],[9,26,"أنثى"],[9,27,"أنثى"],[9,28,"ذكر"],[9,29,"ذكر"],[9,30,"أنثى"],[9,31,"ذكر"],[9,32,"ذكر"],[9,33,"ذكر"],[9,34,"أنثى"],[9,35,"ذكر"],[9,36,"ذكر"],[9,37,"أنثى"],[9,38,"ذكر"],[9,39,"ذكر"],[9,40,"أنثى"],[9,41,"ذكر"],[9,42,"ذكر"],[9,43,"ذكر"],[9,44,"ذكر"],[9,45,"أنثى"],
+  [10,18,"ذكر"],[10,19,"أنثى"],[10,20,"أنثى"],[10,21,"ذكر"],[10,22,"أنثى"],[10,23,"ذكر"],[10,24,"أنثى"],[10,25,"أنثى"],[10,26,"ذكر"],[10,27,"ذكر"],[10,28,"أنثى"],[10,29,"أنثى"],[10,30,"ذكر"],[10,31,"أنثى"],[10,32,"أنثى"],[10,33,"أنثى"],[10,34,"ذكر"],[10,35,"أنثى"],[10,36,"أنثى"],[10,37,"ذكر"],[10,38,"أنثى"],[10,39,"أنثى"],[10,40,"ذكر"],[10,41,"أنثى"],[10,42,"أنثى"],[10,43,"أنثى"],[10,44,"أنثى"],[10,45,"ذكر"],
+  [11,18,"أنثى"],[11,19,"ذكر"],[11,20,"ذكر"],[11,21,"أنثى"],[11,22,"ذكر"],[11,23,"أنثى"],[11,24,"ذكر"],[11,25,"ذكر"],[11,26,"أنثى"],[11,27,"أنثى"],[11,28,"ذكر"],[11,29,"ذكر"],[11,30,"أنثى"],[11,31,"ذكر"],[11,32,"ذكر"],[11,33,"ذكر"],[11,34,"أنثى"],[11,35,"ذكر"],[11,36,"ذكر"],[11,37,"أنثى"],[11,38,"ذكر"],[11,39,"ذكر"],[11,40,"ذكر"],[11,41,"ذكر"],[11,42,"ذكر"],[11,43,"ذكر"],[11,44,"ذكر"],[11,45,"أنثى"],
+  [12,18,"ذكر"],[12,19,"أنثى"],[12,20,"أنثى"],[12,21,"ذكر"],[12,22,"أنثى"],[12,23,"ذكر"],[12,24,"أنثى"],[12,25,"أنثى"],[12,26,"ذكر"],[12,27,"ذكر"],[12,28,"أنثى"],[12,29,"أنثى"],[12,30,"ذكر"],[12,31,"أنثى"],[12,32,"أنثى"],[12,33,"أنثى"],[12,34,"ذكر"],[12,35,"أنثى"],[12,36,"أنثى"],[12,37,"ذكر"],[12,38,"أنثى"],[12,39,"أنثى"],[12,40,"أنثى"],[12,41,"أنثى"],[12,42,"أنثى"],[12,43,"أنثى"],[12,44,"أنثى"],[12,45,"ذكر"]
+];
+
+var MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
+var SUPPLEMENTS = [
+  {id:1,name:"حمض الفوليك",dose:"400-800 mcg",benefit:"أساسي قبل وأثناء الحمل",category:"حمل",icon:"💊"},
+  {id:2,name:"أوميغا 3",dose:"1000 mg",benefit:"صحة الدماغ والقلب والمزاج",category:"عام",icon:"🐟"},
+  {id:3,name:"فيتامين D3",dose:"2000-4000 IU",benefit:"المناعة والعظام والهرمونات",category:"عام",icon:"☀️"},
+  {id:4,name:"المغنيسيوم",dose:"300-400 mg",benefit:"تحسين النوم وتخفيف آلام الدورة",category:"دورة",icon:"🔮"},
+  {id:5,name:"CoQ10",dose:"200-600 mg",benefit:"جودة البويضات والطاقة",category:"خصوبة",icon:"⚡"},
+  {id:6,name:"إينوزيتول",dose:"2-4 g",benefit:"تنظيم الدورة وتحسين PCOS",category:"دورة",icon:"🌿"},
+  {id:7,name:"فيتامين B6",dose:"25-50 mg",benefit:"تخفيف متلازمة ما قبل الدورة",category:"دورة",icon:"💛"},
+  {id:8,name:"حديد",dose:"18-27 mg",benefit:"تعويض نزيف الدورة ومنع الأنيميا",category:"دورة",icon:"🔴"},
+  {id:9,name:"زنك",dose:"8-11 mg",benefit:"الخصوبة وصحة الجلد والمناعة",category:"جمال",icon:"🌟"},
+  {id:10,name:"بروبيوتيك",dose:"10B CFU",benefit:"صحة المهبل والجهاز الهضمي",category:"نظافة",icon:"🦠"},
+  {id:11,name:"فيتامين E",dose:"400 IU",benefit:"مضاد أكسدة وتحسين بطانة الرحم",category:"خصوبة",icon:"🌻"},
+  {id:12,name:"أشواغاندا",dose:"300-600 mg",benefit:"تخفيف التوتر وتوازن الكورتيزول",category:"مزاج",icon:"🌱"}
+];
+
+var BEAUTY = [
+  {id:1,name:"غسيل لطيف pH متوازن",type:"تنظيف خارجي",icon:"🧴",tip:"استخدمي مرتين يومياً"},
+  {id:2,name:"سيروم فيتامين C",type:"تنظيف خارجي",icon:"🍊",tip:"صباحاً قبل الحماية من الشمس"},
+  {id:3,name:"مرطب SPF 30+",type:"تنظيف خارجي",icon:"🛡️",tip:"يومياً بغض النظر عن الطقس"},
+  {id:4,name:"ريتينول ليلي",type:"تنظيف خارجي",icon:"🌙",tip:"3 مرات أسبوعياً — ليلاً فقط"},
+  {id:5,name:"غسول مهبلي لاكتيك أسيد",type:"نظافة داخلية",icon:"🌸",tip:"يحافظ على pH الطبيعي"},
+  {id:6,name:"كريم مرطب منطقة حساسة",type:"نظافة داخلية",icon:"💧",tip:"يومياً للترطيب والحماية"},
+  {id:7,name:"حمام بخار للوجه",type:"تنظيف خارجي",icon:"♨️",tip:"مرة أسبوعياً 10 دقائق"},
+  {id:8,name:"ماسك الطين",type:"تنظيف خارجي",icon:"🟤",tip:"مرتين أسبوعياً للمسام"}
+];
+
+var CHILD_TIPS = {
+  "0-1":{title:"الرضيع (0-12 شهر)",tips:["التواصل البصري أساسي للتطور العاطفي","أغانٍ وقصص بسيطة تبني اللغة مبكراً","الروتين الثابت يمنح أماناً نفسياً","الرضاعة الطبيعية تعزز المناعة والترابط"],concerns:["بكاء مستمر يستدعي استشارة طبية","تأخر الاستجابة للأصوات","صعوبة في الرضاعة"]},
+  "1-3":{title:"مرحلة المشي والكلام (1-3 سنوات)",tips:["العب الحر يطور الإبداع والمهارات","حدودٌ واضحة بأسلوب حنون","قراءة القصص يومياً ضرورة وليست رفاهية","لا تقارن طفلك بأطفال آخرين"],concerns:["عدم نطق أي كلمة بعمر 18 شهر","نوبات غضب شديدة جداً","تأخر المشي بعد 18 شهر"]},
+  "3-6":{title:"مرحلة ما قبل المدرسة (3-6 سنوات)",tips:["الألعاب التعاونية تبني المهارات الاجتماعية","اسمح للطفل باتخاذ قرارات صغيرة","علّم التعبير عن المشاعر بالكلام","الروتين والمتابعة تبني الثقة بالنفس"],concerns:["صعوبة التركيز أكثر من دقائق","لا يتفاعل مع أطفال آخرين","مشاكل في التحكم ببول أو براز"]},
+  "6-12":{title:"سن المدرسة (6-12 سنة)",tips:["شجّع نقاط قوته ولا تركز على ضعفه","الأنشطة الرياضية تبني الانضباط والصحة","حوارات مفتوحة حول المشاعر والأصدقاء","المشاركة في المهام المنزلية تبني المسؤولية"],concerns:["تراجع مستوى الدراسة المفاجئ","عزلة اجتماعية","اضطرابات النوم المتكررة"]},
+  "12-18":{title:"المراهقة (12-18 سنة)",tips:["احترم خصوصيته مع الحفاظ على التواصل","ناقش المواقف لا تصدر أحكاماً","كن قدوة لا مجرد آمر","الحدود الواضحة مع مساحة للاستقلالية"],concerns:["الانعزال التام عن الأسرة","أي إشارات لإيذاء النفس","تغيرات مزاجية حادة جداً"]}
+};
+
+// ===== HELPERS =====
+function lunarAge(age){ return age+1; }
+function chineseGender(age,month){
+  var la=lunarAge(age);
+  var e=CHINESE.find(function(r){return r[0]===month && r[1]===la;});
+  return e?e[2]:null;
+}
+function fmtDate(d){
+  return d.toLocaleDateString('ar-SA',{day:'numeric',month:'long',year:'numeric'});
+}
+function getChildCat(age){
+  if(age<1)return"0-1";if(age<3)return"1-3";if(age<6)return"3-6";if(age<12)return"6-12";return"12-18";
+}
+
+// ===== TABS =====
+var currentTab='cycle';
+function setTab(id){
+  document.getElementById('page-'+currentTab).classList.add('hidden');
+  document.getElementById('tab-'+currentTab).classList.remove('active');
+  currentTab=id;
+  document.getElementById('page-'+id).classList.remove('hidden');
+  document.getElementById('tab-'+id).classList.add('active');
+  if(id==='chinese') renderChineseMonths();
+  if(id==='children') renderChildren();
+  if(id==='profile') renderProfile();
+  if(id==='cart') renderCart();
+}
+
+// ===== CYCLE =====
+function recalc(){
+  var lp=document.getElementById('last-period').value;
+  var cl=parseInt(document.getElementById('cycle-len').value);
+  state.lastPeriod=lp; state.cycleLength=cl; saveState();
+  if(!lp) return;
+  var last=new Date(lp);
+  var ovDay=cl-14;
+  var ov=new Date(last); ov.setDate(ov.getDate()+ovDay);
+  var fs=new Date(ov); fs.setDate(fs.getDate()-5);
+  var fe=new Date(ov); fe.setDate(fe.getDate()+1);
+  var np=new Date(last); np.setDate(np.getDate()+cl);
+  var today=new Date();
+  var diff=Math.floor((today-last)/86400000);
+  var phase=diff<=5?'حيض':diff<=(ovDay-5)?'مرحلة الجريب':diff<=(ovDay+1)?'🌸 نافذة الخصوبة':diff<=cl?'مرحلة الجسم الأصفر':'قد تأخرت الدورة';
+
+  document.getElementById('ov-date').textContent=fmtDate(ov);
+  document.getElementById('next-period').textContent=fmtDate(np);
+  document.getElementById('fertile-start').textContent=fmtDate(fs);
+  document.getElementById('fertile-end').textContent=fmtDate(fe);
+  document.getElementById('date-cards').style.display='grid';
+  document.getElementById('cycle-visual').style.display='block';
+  document.getElementById('intercourse-tip').style.display='block';
+
+  // phase strip
+  var strip=document.getElementById('phase-strip');
+  strip.className='phase-strip'+(phase.includes('خصوبة')?' fertile':phase.includes('حيض')?' menstrual':'');
+  strip.textContent='📍 الآن: '+phase+' — يوم '+diff+' من الدورة';
+  strip.classList.remove('hidden');
+
+  // cycle bar
+  var bar=document.getElementById('cycle-bar');
+  var pct=Math.min((diff/cl)*100,100);
+  var ovPct=(ovDay/cl)*100;
+  bar.innerHTML=
+    '<div style="position:absolute;left:0;top:0;bottom:0;width:'+(5/cl*100)+'%;background:#ef444499"></div>'+
+    '<div style="position:absolute;left:'+(5/cl*100)+'%;top:0;bottom:0;width:'+((ovDay-5)/cl*100)+'%;background:#3b82f699"></div>'+
+    '<div style="position:absolute;left:'+ovPct+'%;top:0;bottom:0;width:'+(2/cl*100)+'%;background:#f59e0b"></div>'+
+    '<div style="position:absolute;left:'+((ovDay+2)/cl*100)+'%;top:0;bottom:0;width:'+((cl-ovDay-2)/cl*100)+'%;background:#a855f799"></div>'+
+    (diff<=cl?'<div style="position:absolute;top:0;bottom:0;left:'+pct+'%;width:3px;background:#fff;border-radius:2px;transform:translateX(-50%);box-shadow:0 0 6px rgba(255,255,255,.8)"></div>':'');
+
+  // intercourse text
+  document.getElementById('intercourse-text').innerHTML=
+    '✅ <strong style="color:#f59e0b">للمتعة:</strong> في مرحلة الإباضة ترتفع الرغبة الجنسية بشكل طبيعي — أيام '+(ovDay-2)+' إلى '+(ovDay+1)+'<br/>'+
+    '🌸 <strong style="color:#ec4899">للحمل:</strong> ابدئي 3 أيام قبل الإباضة (يوم '+(ovDay-3)+') وحتى يوم الإباضة<br/>'+
+    '😴 <strong style="color:#6b7280">الراحة:</strong> أيام الحيض وآخر الدورة — الجسم بحاجة لتعافٍ';
+
+  // update profile summary
+  renderHealthSummary(phase, fmtDate(ov), fmtDate(np));
+}
+
+// ===== FERTILITY BARS =====
+(function(){
+  var data=[
+    {range:"20-25",level:95,label:"ذروة الخصوبة",color:"#22c55e"},
+    {range:"25-30",level:88,label:"خصوبة ممتازة",color:"#84cc16"},
+    {range:"30-35",level:72,label:"خصوبة جيدة",color:"#f59e0b"},
+    {range:"35-38",level:50,label:"تراجع ملحوظ",color:"#f97316"},
+    {range:"38-40",level:30,label:"تحديات خصوبة",color:"#ef4444"},
+    {range:"40+",level:15,label:"يُنصح باستشارة طبية",color:"#dc2626"}
+  ];
+  var html='';
+  data.forEach(function(d){
+    html+='<div class="fert-row"><div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:11px"><span style="color:rgba(255,255,255,.7)">سن '+d.range+'</span><span style="color:'+d.color+'">'+d.label+' ('+d.level+'%)</span></div><div class="fert-bar-bg"><div class="fert-bar-fill" style="width:'+d.level+'%;background:'+d.color+'"></div></div></div>';
+  });
+  document.getElementById('fert-bars').innerHTML=html;
+})();
+
+// ===== CHINESE =====
+function renderChineseMonths(){
+  var html='';
+  MONTHS.forEach(function(m,i){
+    var active=(i+1)===state.chineseMonth;
+    html+='<button class="btn-month'+(active?' active':'')+'" onclick="selectChineseMonth('+(i+1)+')">'+m+'</button>';
+  });
+  document.getElementById('month-btns').innerHTML=html;
+  updateGenderResult();
+  updateBestMonths();
+  updateChineseTable();
+}
+function selectChineseMonth(m){
+  state.chineseMonth=m; saveState();
+  renderChineseMonths();
+}
+function updateGenderResult(){
+  var r=chineseGender(state.age,state.chineseMonth);
+  var el=document.getElementById('gender-result');
+  var isMale=r==='ذكر';
+  el.style.background=r?( isMale?'linear-gradient(135deg,rgba(59,130,246,.2),rgba(147,197,253,.1))':'linear-gradient(135deg,rgba(236,72,153,.2),rgba(251,182,206,.1))'):'rgba(255,255,255,.05)';
+  el.style.border=r?(isMale?'1px solid rgba(59,130,246,.3)':'1px solid rgba(236,72,153,.3)'):'1px solid rgba(255,255,255,.1)';
+  el.innerHTML='<div style="font-size:40px">'+(r?(isMale?'👦':'👧'):'❓')+'</div>'+
+    '<div style="font-size:22px;font-weight:800;margin-top:8px;color:'+(r?(isMale?'#60a5fa':'#f472b6'):'#6b7280')+'">'+(r||'أدخلي عمرك أولاً')+'</div>'+
+    '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px">عمرك القمري: '+lunarAge(state.age)+' | شهر: '+MONTHS[state.chineseMonth-1]+'</div>';
+}
+function setDesiredGender(g){
+  state.desiredGender=g; saveState();
+  document.getElementById('btn-want-male').style.background=g==='ذكر'?'rgba(59,130,246,.3)':'rgba(255,255,255,.06)';
+  document.getElementById('btn-want-male').style.color=g==='ذكر'?'#fff':'rgba(255,255,255,.5)';
+  document.getElementById('btn-want-female').style.background=g==='أنثى'?'rgba(236,72,153,.3)':'rgba(255,255,255,.06)';
+  document.getElementById('btn-want-female').style.color=g==='أنثى'?'#fff':'rgba(255,255,255,.5)';
+  updateBestMonths();
+}
+function updateBestMonths(){
+  var html=''; var la=lunarAge(state.age);
+  for(var m=1;m<=12;m++){
+    var e=CHINESE.find(function(r){return r[0]===m&&r[1]===la;});
+    if(e&&e[2]===state.desiredGender){
+      var isMale=state.desiredGender==='ذكر';
+      html+='<div class="month-tag" style="background:'+(isMale?'rgba(59,130,246,.2)':'rgba(236,72,153,.2)')+';border:1px solid '+(isMale?'rgba(59,130,246,.4)':'rgba(236,72,153,.4)')+';color:'+(isMale?'#93c5fd':'#f9a8d4')+'">'+MONTHS[m-1]+'</div>';
+    }
+  }
+  document.getElementById('best-months').innerHTML=html||'<div style="font-size:11px;color:rgba(255,255,255,.4)">أدخلي عمرك في ملفك الشخصي أولاً</div>';
+}
+function updateChineseTable(){
+  var html='<td style="color:rgba(255,255,255,.5);font-size:10px">النتيجة</td>';
+  var la=lunarAge(state.age);
+  for(var m=1;m<=12;m++){
+    var e=CHINESE.find(function(r){return r[0]===m&&r[1]===la;});
+    var r=e?e[2]:null;
+    html+='<td style="color:'+(r==='ذكر'?'#60a5fa':r==='أنثى'?'#f472b6':'#6b7280')+'">'+(r==='ذكر'?'♂':r==='أنثى'?'♀':'?')+'</td>';
+  }
+  var row=document.getElementById('ch-table-row');
+  if(row) row.innerHTML=html;
+}
+
+// ===== CART =====
+function renderCart(){
+  var html='';
+  SUPPLEMENTS.forEach(function(s){
+    var key='supp-'+s.id;
+    var added=!!state.cartKeys[key];
+    html+='<div class="item-row"><div class="item-icon">'+s.icon+'</div><div class="item-info"><div class="item-name">'+s.name+'</div><div class="item-sub">'+s.benefit+'</div><div class="item-dose">الجرعة: '+s.dose+'</div></div><div class="item-actions"><span class="cat-badge">'+s.category+'</span><button class="'+(added?'btn-added':'btn-add')+'" onclick="toggleCart(\'supp\','+s.id+')">'+(added?'✓ مضاف':'+ أضف')+'</button></div></div>';
+  });
+  document.getElementById('supplements-list').innerHTML=html;
+
+  html='';
+  BEAUTY.forEach(function(b){
+    var key='beauty-'+b.id;
+    var added=!!state.cartKeys[key];
+    html+='<div class="item-row"><div class="item-icon">'+b.icon+'</div><div class="item-info"><div class="item-name">'+b.name+'</div><div class="item-type">'+b.type+'</div><div class="item-sub">'+b.tip+'</div></div><div class="item-actions"><button class="'+(added?'btn-added':'btn-add')+'" style="'+(added?'':'background:rgba(34,211,238,.15);border-color:rgba(34,211,238,.3);color:#22d3ee')+'" onclick="toggleCart(\'beauty\','+b.id+')">'+(added?'✓ مضاف':'+ أضف')+'</button></div></div>';
+  });
+  document.getElementById('beauty-list').innerHTML=html;
+  updateCartSummary();
+}
+function toggleCart(type,id){
+  var key=type+'-'+id;
+  if(state.cartKeys[key]){
+    delete state.cartKeys[key];
+    state.cart=state.cart.filter(function(i){return !(i.id===id&&i.type===type);});
+  } else {
+    var item=(type==='supp'?SUPPLEMENTS:BEAUTY).find(function(x){return x.id===id;});
+    if(item){ state.cartKeys[key]=true; state.cart.push(Object.assign({},item,{type:type})); }
+  }
+  saveState();
+  renderCart();
+}
+function updateCartSummary(){
+  var n=state.cart.length;
+  var cc=document.getElementById('cart-count');
+  var cn=document.getElementById('cart-count-num');
+  if(n>0){
+    cc.classList.remove('hidden'); cc.textContent=n;
+    cn.textContent=n;
+    document.getElementById('cart-summary').classList.remove('hidden');
+    var html='';
+    state.cart.forEach(function(i){
+      html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:12px"><span>'+i.icon+' '+i.name+'</span><button class="btn-remove" onclick="toggleCart(\''+i.type+'\','+i.id+')">حذف</button></div>';
+    });
+    document.getElementById('cart-items').innerHTML=html;
+  } else {
+    cc.classList.add('hidden');
+    document.getElementById('cart-summary').classList.add('hidden');
+  }
+}
+function shareCart(){
+  var text='سلة SPL الصحية 🛒\n';
+  state.cart.forEach(function(i){text+='• '+i.icon+' '+i.name+'\n';});
+  text+='\nإعداد: سعد علي سعد القرني | مستشفى سبت العلايه';
+  if(navigator.share){ navigator.share({text:text}); }
+  else if(navigator.clipboard){ navigator.clipboard.writeText(text); alert('تم النسخ ✅'); }
+}
+
+// ===== CHILDREN =====
+function renderChildren(){
+  var html='';
+  state.children.forEach(function(c,i){
+    html+='<div style="display:flex;gap:8px;margin-bottom:8px">'+
+      '<input type="text" placeholder="اسم الطفل '+(i+1)+'" value="'+c.name+'" oninput="updateChild('+i+',\'name\',this.value)" style="flex:1"/>'+
+      '<input type="number" placeholder="العمر" value="'+c.age+'" oninput="updateChild('+i+',\'age\',this.value)" style="width:70px"/>'+
+      '</div>';
+  });
+  document.getElementById('children-inputs').innerHTML=html;
+  renderChildCards();
+}
+function updateChild(i,field,val){
+  state.children[i][field]=val; saveState();
+  renderChildCards();
+}
+function addChild(){
+  state.children.push({name:'',age:''}); saveState();
+  renderChildren();
+}
+function renderChildCards(){
+  var html='';
+  state.children.forEach(function(c,i){
+    if(c.age==='') return;
+    var age=Number(c.age);
+    var cat=getChildCat(age);
+    var info=CHILD_TIPS[cat];
+    html+='<div class="card mt14"><div class="child-header"><div><div style="font-size:14px;font-weight:800">'+(c.name||'الطفل '+(i+1))+'</div><div style="font-size:11px;color:#f59e0b">'+info.title+'</div></div><div class="age-bubble">'+age+'</div></div>';
+    html+='<div style="font-size:11px;font-weight:700;color:#22c55e;margin-bottom:6px">✅ نصائح التربية</div>';
+    info.tips.forEach(function(t){html+='<div style="font-size:11px;color:rgba(255,255,255,.7);margin-bottom:4px;padding-right:8px">• '+t+'</div>';});
+    html+='<div style="font-size:11px;font-weight:700;color:#ef4444;margin:10px 0 6px">⚠️ علامات تستدعي الانتباه</div>';
+    info.concerns.forEach(function(t){html+='<div style="font-size:11px;color:rgba(255,180,180,.7);margin-bottom:4px;padding-right:8px">• '+t+'</div>';});
+    html+='</div>';
+  });
+  document.getElementById('children-cards').innerHTML=html;
+}
+
+// ===== PROFILE =====
+function saveProfile(){
+  state.name=document.getElementById('prof-name').value;
+  state.age=parseInt(document.getElementById('prof-age').value)||28;
+  state.partnerAge=parseInt(document.getElementById('prof-partner').value)||30;
+  saveState();
+  updateChineseTable();
+  updateGenderResult();
+  updateBestMonths();
+}
+function setStatus(s){
+  state.maritalStatus=s; saveState();
+  ['متزوجة','مطلقة','أرملة','عزباء'].forEach(function(x){
+    document.getElementById('status-'+x).classList.toggle('active',x===s);
+  });
+}
+function toggleCond(c){
+  var idx=state.conditions.indexOf(c);
+  if(idx>-1) state.conditions.splice(idx,1); else state.conditions.push(c);
+  saveState();
+  document.getElementById('cond-'+c).classList.toggle('active',state.conditions.includes(c));
+}
+function renderProfile(){
+  document.getElementById('prof-name').value=state.name;
+  document.getElementById('prof-age').value=state.age;
+  document.getElementById('prof-partner').value=state.partnerAge;
+  setStatus(state.maritalStatus);
+  state.conditions.forEach(function(c){
+    var el=document.getElementById('cond-'+c);
+    if(el) el.classList.add('active');
+  });
+  renderHealthSummary();
+}
+function renderHealthSummary(phase,ovDate,npDate){
+  var info=[
+    {label:"العمر القمري",value:lunarAge(state.age)+' سنة',icon:"🌙"},
+    {label:"حالتي",value:state.maritalStatus,icon:"💍"},
+    {label:"طول الدورة",value:state.cycleLength+' يوم',icon:"📅"},
+    {label:"مرحلة الدورة",value:phase||'-',icon:"🔄"},
+    {label:"الإباضة القادمة",value:ovDate||'-',icon:"🥚"},
+    {label:"الدورة القادمة",value:npDate||'-',icon:"🗓️"}
+  ];
+  var el=document.getElementById('health-summary');
+  if(!el) return;
+  el.innerHTML=info.map(function(i){
+    return '<div style="background:rgba(255,255,255,.04);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.07)"><div style="font-size:16px;margin-bottom:4px">'+i.icon+'</div><div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:2px">'+i.label+'</div><div style="font-size:12px;font-weight:700;color:#f0e6ff">'+i.value+'</div></div>';
+  }).join('');
+}
+
+// ===== SHARE =====
+function shareReport(){
+  var text='تقرير SPL - سعد برو لايف 🌸\n'+
+    'الاسم: '+(state.name||'غير محدد')+'\n'+
+    'العمر: '+state.age+' سنة\n'+
+    'الحالة: '+state.maritalStatus+'\n'+
+    'مرحلة الدورة: '+(document.getElementById('phase-strip').textContent||'غير محسوب')+'\n'+
+    'الإباضة: '+(document.getElementById('ov-date').textContent||'-')+'\n'+
+    'نافذة الخصوبة: '+(document.getElementById('fertile-start').textContent||'-')+' — '+(document.getElementById('fertile-end').textContent||'-')+'\n\n'+
+    'إعداد: سعد علي سعد القرني | فني مختبر مستشفى سبت العلايه العام\n'+
+    'التطبيق: SPL - Saad Pro Life';
+  if(navigator.share){ navigator.share({title:'SPL Report',text:text}); }
+  else if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){
+      document.getElementById('share-btn').textContent='✅ نُسخ';
+      setTimeout(function(){document.getElementById('share-btn').textContent='📤 مشاركة';},2000);
+    });
+  }
+}
+
+// ===== INIT =====
+window.onload=function(){
+  if(state.lastPeriod){
+    document.getElementById('last-period').value=state.lastPeriod;
+    document.getElementById('cycle-len').value=state.cycleLength;
+    document.getElementById('cycle-len-val').textContent=state.cycleLength;
+    recalc();
+  }
+  // init desired gender buttons
+  setDesiredGender(state.desiredGender);
+};
+</script>
+</body>
+</html>
